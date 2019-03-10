@@ -1,0 +1,58 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>GDScript Online</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+	
+	<meta charset="utf-8">
+	<meta name="description" content="A web implementation for the gdscript-cli wrapper.">
+	<meta name="robots" content="index, follow">
+	<meta name="author" content="William Tumeo">
+	
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="@tumeo_">
+	<meta name="twitter:title" content="GDScript Online">
+	<meta name="twitter:description" content="A web implementation for the gdscript-cli wrapper.">
+
+	<meta property="og:type" content="profile">
+	<meta property="og:title" content="GDScript Online">
+	<meta property="og:url" content="https://gd.tumeo.space/">
+	<meta property="profile:first_name" content="William">
+	<meta property="profile:last_name" content="Tumeo">
+	
+	<link rel="stylesheet" type="text/css" href="/static/css/editor.css">
+</head>
+
+<body>
+
+	<h1><a href="/">GDScript Online</a> <span id="version"><a href="https://godotengine.org/article/release-candidate-godot-3-1-rc-1" target="_blank">3.1-rc1</a></span></h1>
+
+	<form action="/run.gd" method="post">
+		{% csrf_token %}
+		<input type="hidden" name="script">
+		<input type="hidden" name="mode" value="script">
+		<ul>
+			<div id="container" class="editor container"></div>
+			
+			<div id="console">
+				<textarea class="editor result" name="result" placeholder="Output" readonly id="" cols="34" rows="12"></textarea>
+				<button type="submit">Run script</button>
+			</div>
+		</ul>
+	</form>
+
+	<script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+	<script src="/static/js/monaco/min/vs/loader.js"></script>
+	<script src="/static/js/tokenizer.js"></script>
+	<script src="/static/js/lz-string.min.js"></script>
+	<script src="/static/js/editor.js"></script>
+
+</body>
+</html>
