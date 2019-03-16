@@ -55,3 +55,12 @@ div.buttons {
 	position: absolute;
     right: 10%;
 }
+
+small a {
+    color: white;
+    position: fixed;
+    right: 1%;
+    bottom: 1%;
+    font-size: medium;
+    font-family: monospace;
+}
