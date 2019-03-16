@@ -72,19 +72,31 @@ require(['vs/editor/editor.main'], init_editor.bind(null, document.getElementByI
 $("form").on("submit", function(event) {
     event.preventDefault();
     var code = window.editor.getValue();
-    history.pushState({code:code}, "Run Script", "/"+LZString.compressToEncodedURIComponent(code));
     document.querySelector('input[name=script]').value = code;
-    console.log('CODE RUN');
 
     $.post(this.action, $(this).serialize(), function(result){
-        console.log('CODE RESULT');
-        console.log(result);
-        $('textarea').val(result);
-        var err = result.match(/At:\s<script>:(\d+)/);
-        if (err !== null) {
-          show_error(parseInt(err[1]));
+        
+        var err_line = result.match(/At:\s<script>:(\d+)/);
+        if (err_line !== null) {
+            var err_info = result.split('\n');
+            err_info = err_info[err_info.length-2].split(':');
+            var err_name = err_info.shift();
+            var err_msg = err_info.join(':').trim();
+            $('textarea').val(err_msg);
+            $('textarea').addClass('error');
+            show_error(parseInt(err_line[1]));
+            var err = new Error(err_msg, '<gdscript>', parseInt(err_line[1]));
+            throw err;
+        } else {
+            $('textarea').val(result);
+            $('textarea').removeClass('error');
         }
     });
 });
 
-console.log('EDITOR LOADED');
+$(".share").on("click", function(event) {
+    var code = window.editor.getValue();
+    var url = location.host+"/"+LZString.compressToEncodedURIComponent(code);
+    $('textarea').val('[Share]\n\n'+url);
+    $('textarea').removeClass('error');
+});

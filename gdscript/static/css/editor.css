@@ -47,7 +47,11 @@ a {
 	padding: 5px;
 }
 
-#console button {
+.editor.result.error {
+    color: #dd4c65;
+}
+
+div.buttons {
 	position: absolute;
-	right: 10%;
+    right: 10%;
 }
