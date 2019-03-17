@@ -10,7 +10,7 @@ def root(request):
 
 
 def index(request):
-    return render(request, 'editor.html')
+    return render(request, 'playground.html')
 
 def script(request):
     code = request.POST.get('script')
