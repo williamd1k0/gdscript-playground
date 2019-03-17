@@ -9,10 +9,10 @@
 <body>
     
     {% include "navbar.html" %}
-	   {% include "modal.html" %}
-	   <div class="container-fluid">
+    {% include "modal.html" %}
+	<div class="container-fluid">
 	   
-	   <div class="container">
+	   <div class="container-fluid">
   <div class="row">
   
     <div class="col-sm">
@@ -20,9 +20,18 @@
             <li class="nav-item">
                 <a class="nav-link active" href="#" aria-disabled="false">Script</a>
             </li>
+            <li class="nav-item">
+                <form id="run-script" action="/run.gd" method="post">
+                    <button class="share btn btn-outline-info" type="button" data-toggle="modal" data-target="#ShareModal">Share</button>
+                    {% csrf_token %}
+                    <input type="hidden" name="script">
+                    <input type="hidden" name="mode" value="script">
+                    <button class="run-script btn btn-outline-success" type="submit" >Run</button>
+                </form>
+            </li>
         </ul>
         <div id="editor">
-            <textarea cols="34" rows="12"></textarea>
+            
         </div>
     </div>
     
@@ -31,9 +40,12 @@
             <li class="nav-item">
                 <a class="nav-link active" href="#" aria-disabled="false">Output</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#" aria-disabled="true">Godot Engine v3.1-stable</a>
+            </li>
         </ul>
         <div id="console">
-            <textarea readonly cols="34" rows="12"></textarea>
+            
         </div>
 
 	   </div>
@@ -42,13 +54,6 @@
 	<small><a target="_blank" href="https://github.com/williamd1k0/gdscript-online">＜Source-Code＞</a></small>
   </div>
 </div>
-
-
-
-
-	<!-- <script src="/static/js/tokenizer.js"></script> -->
-	<script src="/static/js/lz-string.min.js"></script>
-	<!-- <script src="/static/js/editor.js"></script> -->
 
 </body>
 </html>

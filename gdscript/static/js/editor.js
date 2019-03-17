@@ -97,6 +97,6 @@ $("form").on("submit", function(event) {
 $(".share").on("click", function(event) {
     var code = window.editor.getValue();
     var url = location.host+"/"+LZString.compressToEncodedURIComponent(code);
-    $('textarea').val('[Share]\n\n'+url);
-    $('textarea').removeClass('error');
+    $('#share-url').html(url);
+    document.querySelector('#share-url').href = url;
 });
