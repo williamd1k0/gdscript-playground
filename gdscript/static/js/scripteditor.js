@@ -31,14 +31,21 @@ $(document).ready(function() {
         indentWithTabs: true,
         scrollbarStyle: 'null',
         theme: 'dracula',
-        mode:  "python",
+        mode:  "gdscript",
         value: sample,
     });
+
     $(".share").on("click", function(event) {
         var code = EDITOR.getValue();
         var url = location.protocol+'//'+location.host+"/"+LZString.compressToEncodedURIComponent(code);
-        console.log(url);
         $('#share-url').text(url);
         document.querySelector('#share-url').href = url;
-    });});
+    });
+
+    $("#new-script").on("click", function(event) {
+        EDITOR.setValue(SAMPLE);
+        OUTPUT.setValue('');
+    });
+
+});
 
