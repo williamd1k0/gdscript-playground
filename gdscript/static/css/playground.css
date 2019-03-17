@@ -3,3 +3,9 @@
 #editor, #console {
     font-size: 12px;
 }
+
+small a {
+    position: fixed;
+    bottom: 1%;
+    left: 1%;
+}
