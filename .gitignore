@@ -104,3 +104,5 @@ node_modules/
 # Database
 *.db
 *.sqlite3
+
+*.cuda-proj
