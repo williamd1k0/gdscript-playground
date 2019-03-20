@@ -19,20 +19,20 @@ $(document).ready(function() {
         document.querySelector('input[name=script]').value = code;
 
         $.post(this.action, $(this).serialize(), function(result){
-            var err_line = result.match(/At:\s<script>:(\d+)/);
-            if (err_line !== null) {
-                var err_info = result.split('\n');
-                err_info = err_info[err_info.length-2].split(':');
-                var err_name = err_info.shift();
-                var err_msg = err_info.join(':').trim();
-                OUTPUT.setValue(err_msg);
-                show_error(parseInt(err_line[1])-1);
-                $('.toast').toast('show');
-                var err = new Error(err_msg, '<gdscript>', parseInt(err_line[1]));
-                throw err;
-            } else {
-                if (!result.trim()) result = 'None';
-                OUTPUT.setValue(result);
+            switch(result.result) {
+                case 'ok':
+                    var output = result.output.trim();
+                    if (!output) output = 'None';
+                    OUTPUT.setValue(output);
+                    break;
+                case 'error':
+                    OUTPUT.setValue(result.message);
+                    show_error(result.line-1);
+                    var err = new Error(result.error+': '+result.message, '<gdscript>', result.line);
+                    throw err;
+                default:
+                    console.error('Unknown response.');
+                    console.error(result);
             }
         });
     });

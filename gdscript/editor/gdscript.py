@@ -33,16 +33,16 @@ import os
 import subprocess
 import sys
 import re
+import json
 from tempfile import gettempdir
 from tempfile import NamedTemporaryFile as tempfile
 
-__version__ = 0, 5, 0
+__version__ = 0, 6, 0
 
 VERBOSE1 = False # gdscript-cli logs
 VERBOSE2 = False # default godot behavior
 VERBOSE3 = False # godot verbose mode
 GODOT_BINARY = os.environ.get('GODOT_BINARY', 'godot')
-DEFAULT_OUTPUT = os.environ.get('DEFAULT_OUTPUT', 'windows')
 
 
 def text_indent(text):
@@ -171,10 +171,11 @@ class ScriptProcess(object):
     script_path = None
     godot_bin = ''
 
-    def __init__(self, script_body, gdbin=None, window=False):
+    def __init__(self, script_body, gdbin=None, window=False, json=False):
         self.script_body = script_body
         self.godot_bin = gdbin
         self.window = window
+        self.json = json
 
     @property
     def script(self):
@@ -211,6 +212,25 @@ class ScriptProcess(object):
         with open(self.script, 'w', encoding='utf-8') as gds:
             gds.write(str(self.script_body))
         del gds
+    
+    def parse_json(self, output):
+        re_err = re.compile(r'At:\s<script>:(\d+)')
+        err_line = re_err.search(output)
+        if err_line:
+            err_info = output.split('\n')
+            err_info = err_info[len(err_info)-2].split(':')
+            err_name = err_info[0]
+            del err_info[0]
+            err_msg = ':'.join(err_info).strip()
+            return json.dumps({
+                'result': 'error',
+                'output': output,
+                'line': int(err_line[1]),
+                'error': err_name,
+                'message': err_msg,
+            })
+        else:
+            return json.dumps({'result': 'ok', 'output': output})
 
     def execute_script(self):
         process = subprocess.Popen(self.command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -221,8 +241,9 @@ class ScriptProcess(object):
         re_err = re.compile(r'\.gd:(\d+)')
 
         def push_output(txt):
-        	print(txt)
-        	output_list.append(txt)
+            if not self.json:
+                print(txt)
+            output_list.append(txt)
         while True:
             ignore_next = False
             error = None
@@ -255,6 +276,9 @@ class ScriptProcess(object):
 
         output = self.log_output()
         output_text = '\n'.join(output_list)
+        if self.json:
+            output_text = self.parse_json(output_text)
+            print(output_text)
         output.write('\n'.join(output_list_verbose))
         output.close()
         os.unlink(self.script)
@@ -270,12 +294,13 @@ class GDSCriptCLI(object):
     GDSCript Command-Line implementation.
     """
 
-    def __init__(self, godot, window=False):
+    def __init__(self, godot, window=False, json=False):
         self._godot = godot
         self._window = window
+        self._json = json
 
     def _create_process(self, script):
-        return ScriptProcess(script, self._godot, self._window)
+        return ScriptProcess(script, self._godot, self._window, self._json)
 
     def oneline(self, code, timeout=0, autoquit=True, sys_exit=True):
         """Executes one line of code."""
@@ -328,7 +353,7 @@ if __name__ == '__main__':
         try:
             subprocess.run([GODOT_BINARY, '--version'], check=True, stdout=subprocess.PIPE)
         except subprocess.CalledProcessError as perr:
-            print('Godot Engine: %s' % perr.output.decode('utf-8'))
+            print('Godot Engine: %s' % perr.output.decode('utf-8').strip())
         sys.exit(0)
 
     import argparse
@@ -340,6 +365,7 @@ if __name__ == '__main__':
     parser.add_argument('-q', '--quit-manually', action='store_true', help='call get_tree().quit() manually (if using Timer or _process)')
     parser.add_argument('-t', '--timeout', type=float, default=0, metavar='<seconds>', help='process timeout (if using Timer or _process)')
     parser.add_argument('-w', '--window', action='store_true', help='show godot window (default behavior on X11/MacOS)')
+    parser.add_argument('-j', '--json', action='store_true', help='json output')
     parser.add_argument('-v', '--verbose', action='count', default=0, help='verbose level (wrapper or default Godot behavior)')
     parser.add_argument('--version', action='store_true', help='print version info')
     # parser.add_argument('-m', '--mode', type=str, default='extends', help='Not implemented yed (ignore it)')
@@ -348,7 +374,7 @@ if __name__ == '__main__':
     VERBOSE1 = args.verbose > 0
     VERBOSE2 = args.verbose > 1
     VERBOSE3 = args.verbose > 2
-    GD = GDSCriptCLI(GODOT_BINARY, args.window)
+    GD = GDSCriptCLI(GODOT_BINARY, args.window, args.json)
     INPUT = args.input
     if args.input == '-':
         if VERBOSE1: print('[gdscript] Reading from STDIN')
