@@ -13,6 +13,7 @@ $(document).ready(function() {
         var a = document.createElement('a');
         a.href = '#';
         a.classList.add('dropdown-item');
+        a.classList.add('bg-dark');
         a.textContent = SNIPPETS[i][0];
         $(a).on('click', click_callback.bind(null, SNIPPETS[i][1]));
         menu.append(a);
