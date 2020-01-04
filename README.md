@@ -1,4 +1,4 @@
-# GDScript Online
+# GDScript Playground 🤖
 
 Web server implementation of the [GDScript CLI Wrapper](https://github.com/williamd1k0/gdscript-cli).
 
