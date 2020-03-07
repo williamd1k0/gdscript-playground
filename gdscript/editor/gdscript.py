@@ -37,12 +37,12 @@ import json
 from tempfile import gettempdir
 from tempfile import NamedTemporaryFile as tempfile
 
-__version__ = 0, 7, 0
+__version__ = 0, 8, 0
 
 VERBOSE1 = False # gdscript-cli logs
 VERBOSE2 = False # default godot behavior
 VERBOSE3 = False # godot verbose mode
-GODOT_BINARY = os.environ.get('GODOT_BINARY', 'godot')
+GODOT_BINARY = os.environ.get('GDBIN', 'godot.headless')
 
 
 def text_indent(text):
@@ -239,7 +239,7 @@ class ScriptProcess(object):
         output_list_verbose = []
         re_ogl = re.compile(r'OpenGL ES [23]\.0 Renderer:')
         re_err = re.compile(r'\.gd:(\d+)')
-        re_ver = re.compile(r'Godot Engine v\d\.\d\.\d')
+        re_ver = re.compile(r'Godot Engine v\d\.\d.+')
 
         def push_output(txt):
             if not self.json:
@@ -267,7 +267,7 @@ class ScriptProcess(object):
                             if 'WARNING: cleanup: ObjectDB Instances still exist' in uline:
                                 push_output('WARNING: Possible memory leak!')
                             ignore_next = True
-                        elif re_ogl.match(uline) is None and re_ver.match(uline) is None:
+                        elif uline and re_ogl.match(uline) is None and re_ver.match(uline) is None:
                             push_output(uline)
                 else:
                     ignore_next = False
@@ -314,6 +314,7 @@ class GDSCriptCLI(object):
 
     def block(self, code, timeout=0, autoquit=True, sys_exit=True):
         """Executes a block of code."""
+        code = code.replace('\t', '    ')
         if re.search(r'^extends\s', code, re.M) is None:
             return self.oneline(code, timeout=timeout, autoquit=autoquit, sys_exit=sys_exit)
         if True: # mode == 'extends':
