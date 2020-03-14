@@ -35,6 +35,12 @@ $(document).ready(function() {
         value: sample,
     });
 
+    EDITOR.setOption("extraKeys", {
+        'Ctrl-Enter': function(cm) {
+          $("form#run-script").submit();
+        }
+    });
+
     $(".share").on("click", function(event) {
         var code = EDITOR.getValue();
         var url = location.protocol+'//'+location.host+"/"+LZString.compressToEncodedURIComponent(code);
