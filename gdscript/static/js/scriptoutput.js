@@ -10,6 +10,7 @@ $(document).ready(function() {
 		readOnly: 'nocursor',
 		theme: 'night',
 		value: '',
+		inputStyle: 'contenteditable',
 	});
 	
 	$("form#run-script").on("submit", function(event) {

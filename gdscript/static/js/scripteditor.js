@@ -32,6 +32,7 @@ $(document).ready(function() {
 		theme: 'dracula',
 		mode:  "gdscript",
 		value: sample,
+		inputStyle: 'contenteditable',
 	});
 
 	EDITOR.setOption("extraKeys", {
