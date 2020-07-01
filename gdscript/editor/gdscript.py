@@ -37,7 +37,7 @@ import json
 from tempfile import gettempdir
 from tempfile import NamedTemporaryFile as tempfile
 
-__version__ = 0, 8, 0
+__version__ = 0, 8, 1
 
 VERBOSE1 = False # gdscript-cli logs
 VERBOSE2 = False # default godot behavior
@@ -245,13 +245,16 @@ class ScriptProcess(object):
             if not self.json:
                 print(txt)
             output_list.append(txt)
+        
         while True:
             ignore_next = False
             error = None
+            version_line = ''
             for line in process.stdout.readlines():
                 uline = strip_ansi(line.decode('utf-8')).strip()
                 output_list_verbose.append(uline)
-                if not ignore_next:
+                if not ignore_next or 'WARNING: ' in uline:
+                    ignore_next = False
                     if VERBOSE2:
                         push_output(uline)
                     elif error is not None:
@@ -267,7 +270,13 @@ class ScriptProcess(object):
                             if 'WARNING: cleanup: ObjectDB Instances still exist' in uline:
                                 push_output('WARNING: Possible memory leak!')
                             ignore_next = True
-                        elif uline and re_ogl.match(uline) is None and re_ver.match(uline) is None:
+                        elif re_ver.match(uline):
+                            version_line = uline
+                            if 'v3.2' in version_line:
+                                ignore_next = True
+                        elif re_ogl.match(uline) and 'v3.2' in version_line:
+                            ignore_next = True
+                        elif re_ogl.match(uline) is None and re_ver.match(uline) is None:
                             push_output(uline)
                 else:
                     ignore_next = False
