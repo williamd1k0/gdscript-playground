@@ -1,7 +1,8 @@
+#!/usr/bin/python
 """
-Meteor License
+Do-License
 
-2020 - William Tumeo
+2022 - William Tumeo
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -10,8 +11,9 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to no conditions.
 
-The above author notice and this permission notice can be included in all
+The above notice and this permission notice can be included in all
 copies or substantial portions of the Software, but only if you so desire.
+Do as you wish.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,7 +25,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # WARN: This code is a bit messy, be careful
 # TODO: Add an error handler
-# TODO: Fix/Sync script line number (remaps)
 # TODO: Improve script template
 # TODO: Add documentation...
 # TODO: Profit :P
@@ -37,7 +38,7 @@ import json
 from tempfile import gettempdir
 from tempfile import NamedTemporaryFile as tempfile
 
-__version__ = 0, 8, 1
+__version__ = 0, 9, 0
 
 VERBOSE1 = False # gdscript-cli logs
 VERBOSE2 = False # default godot behavior
@@ -170,12 +171,14 @@ class ScriptProcess(object):
     index = 0
     script_path = None
     godot_bin = ''
+    timeout = 0
 
-    def __init__(self, script_body, gdbin=None, window=False, json=False):
+    def __init__(self, script_body, gdbin=None, window=False, json=False, timeout=0):
         self.script_body = script_body
         self.godot_bin = gdbin
         self.window = window
         self.json = json
+        self.timeout = timeout
 
     @property
     def script(self):
@@ -202,6 +205,8 @@ class ScriptProcess(object):
             print('GODOT COMMAND:', cmd)
         if not self.window: # and 'win' in sys.platform:
             cmd = cmd + ('--no-window',) # ignored in x11/MacOS
+        if self.timeout > 0:
+            return ('timeout', '-s', 'KILL', str(self.timeout)) + cmd
         return cmd
 
 
@@ -304,13 +309,14 @@ class GDSCriptCLI(object):
     GDSCript Command-Line implementation.
     """
 
-    def __init__(self, godot, window=False, json=False):
+    def __init__(self, godot, window=False, json=False, timeout=0):
         self._godot = godot
         self._window = window
         self._json = json
+        self._timeout = timeout
 
     def _create_process(self, script):
-        return ScriptProcess(script, self._godot, self._window, self._json)
+        return ScriptProcess(script, self._godot, self._window, self._json, self._timeout)
 
     def oneline(self, code, timeout=0, autoquit=True, sys_exit=True):
         """Executes one line of code."""
@@ -385,7 +391,7 @@ if __name__ == '__main__':
     VERBOSE1 = args.verbose > 0
     VERBOSE2 = args.verbose > 1
     VERBOSE3 = args.verbose > 2
-    GD = GDSCriptCLI(GODOT_BINARY, args.window, args.json)
+    GD = GDSCriptCLI(GODOT_BINARY, args.window, args.json, args.timeout)
     INPUT = args.input
     if args.input == '-':
         if VERBOSE1: print('[gdscript] Reading from STDIN')
