@@ -1,0 +1,26 @@
+environment: {}
+parameters: {}
+packages:
+  - name: godot
+    environment: {}
+    parameters: {}
+    annotations: {}
+    functions:
+      - name: version
+        binary: false
+        main: ''
+        runtime: 'python:default'
+        web: true
+        parameters: {}
+        environment: {}
+        annotations: {}
+        limits: {}
+      - name: gdscript
+        binary: false
+        main: ''
+        runtime: 'python:default'
+        web: true
+        parameters: {}
+        environment: {}
+        annotations: {}
+        limits: {}
