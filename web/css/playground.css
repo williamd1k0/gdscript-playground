@@ -49,3 +49,10 @@ html, body {
 .break-word {
     word-wrap: break-word;
 }
+
+#spinner {
+    visibility: hidden;
+}
+#spinner.active {
+    visibility: visible;
+}

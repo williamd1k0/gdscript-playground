@@ -18,8 +18,9 @@ $(document).ready(function() {
 		OUTPUT.setValue('');
 		var code = EDITOR.getValue();
 		document.querySelector('input[name=code]').value = code;
-
+		document.querySelector('#spinner').classList.add('active');
 		$.post(this.action, $(this).serialize(), function(result){
+			document.querySelector('#spinner').classList.remove('active');
 			switch(result.result) {
 				case 'ok':
 					var output = result.output.trim();
