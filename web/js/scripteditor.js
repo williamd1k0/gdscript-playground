@@ -22,7 +22,7 @@ function show_error(line) {
 }
 
 $(document).ready(function() {
-	var code_injection = LZString.decompressFromEncodedURIComponent(location.pathname.substring(1));
+	var code_injection = LZString.decompressFromEncodedURIComponent(location.search.substring(1));
 	var sample = code_injection ? code_injection : SAMPLE;
 	EDITOR = CodeMirror(document.querySelector('#editor'), {
 		lineNumbers: true,
@@ -30,7 +30,7 @@ $(document).ready(function() {
 		indentWithTabs: true,
 		scrollbarStyle: 'null',
 		theme: 'dracula',
-		mode:  "gdscript",
+		mode: "gdscript",
 		value: sample,
 		inputStyle: 'contenteditable',
 	});
@@ -43,7 +43,7 @@ $(document).ready(function() {
 
 	$(".share").on("click", function(event) {
 		var code = EDITOR.getValue();
-		var url = location.protocol+'//'+location.host+"/"+LZString.compressToEncodedURIComponent(code);
+		var url = location.pathname+"?"+LZString.compressToEncodedURIComponent(code);
 		$('#share-url').text(url);
 		document.querySelector('#share-url').href = url;
 	});
