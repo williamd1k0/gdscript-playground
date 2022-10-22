@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "web-functions"
+    paths:
+      - "web/**"
   workflow_dispatch:
 
 permissions:
