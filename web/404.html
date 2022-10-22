@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
+	<script>
+		// Compat: Redirect the old dynamic code route to main page
+		var pathname = location.pathname.split('/');
+		var code = pathname[pathname.length-1];
+		pathname = location.pathname.replace(code, '?'+code);
+		location.href = location.origin + pathname;
+	</script>
 </head>
 <body>
 </body>
