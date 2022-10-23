@@ -18,7 +18,12 @@ $(document).ready(function() {
 		var code = EDITOR.getValue();
 		document.querySelector('input[name=code]').value = code;
 		document.querySelector('#spinner').classList.add('active');
-		$.post(this.action, $(this).serialize(), function(result){
+		$.get({
+			url: this.action,
+			headers: {
+				'X-Require-Whisk-Auth': {{ site.gdscript_function.token | tojson }}
+			}
+		}, $(this).serialize(), function(result){
 			document.querySelector('#spinner').classList.remove('active');
 			switch(result.result) {
 				case 'ok':
@@ -37,7 +42,12 @@ $(document).ready(function() {
 		});
 	});
 
-	$.get("{{ site.version_function }}", function(result) {
+	$.get({
+		url: {{ site.version_function.url | tojson }},
+		headers: {
+			'X-Require-Whisk-Auth': {{ site.version_function.token | tojson }}
+		}
+	}, function(result) {
 		document.querySelector("#godot-version").textContent = result;
 	});
 });
