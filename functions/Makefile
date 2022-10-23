@@ -5,7 +5,7 @@ VERSION_TARGET := packages/godot/version/godot_version.py
 all: ${BIN_TARGET} ${VERSION_TARGET}
 
 ${BIN_TARGET}: ${GODOT_BIN}
-	ln -f $< $@
+	upx -9 -o $@ $<
 
 ${VERSION_TARGET}: ${GODOT_BIN}
 	printf 'GODOT_VERSION = "%s"' '$(shell $< --version)' > $@
