@@ -1,0 +1,11 @@
+{% extends "layouts/app.html.j2" %}
+
+{% block content %}
+	{{ super() }}
+	{% include 'includes/navbar.html.j2' %}
+
+	{% include 'includes/share-modal.html.j2' %}
+	{% include 'includes/editors.html.j2' %}
+
+	{% include 'includes/adsense.html.j2' %}
+{% endblock %}
