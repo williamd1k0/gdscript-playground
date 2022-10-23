@@ -6,6 +6,7 @@ on:
       - "web-functions"
     paths:
       - "web/**"
+      - ".github/**"
   workflow_dispatch:
 
 permissions:
