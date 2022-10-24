@@ -1,0 +1,21 @@
+
+var SNIPPETS = {{ data.snippets | tojson }};
+
+$(document).ready(function() {
+	var menu = $("#menu-snippets");
+	// <a class="dropdown-item" href="#">Hello World</a>
+	for (let snippet of SNIPPETS) {
+		var a = document.createElement('a');
+		a.href = '#';
+		a.classList.add('dropdown-item');
+		a.classList.add('bg-dark');
+		a.textContent = snippet.name;
+		$(a).on('click', click_callback.bind(null, snippet.code));
+		menu.append(a);
+	}
+	
+	function click_callback(code) {
+		EDITOR.setValue(code);
+		OUTPUT.setValue('');
+	}
+});
