@@ -3,9 +3,10 @@
 {% block content %}
 	{{ super() }}
 	{% include 'includes/navbar.html.j2' %}
-
 	{% include 'includes/share-modal.html.j2' %}
-	{% include 'includes/editors.html.j2' %}
 
-	{% include 'includes/adsense.html.j2' %}
+	<div class="main-container">
+		{% include 'includes/editors.html.j2' %}
+		{% include 'includes/adsense.html.j2' %}
+	</div>
 {% endblock %}

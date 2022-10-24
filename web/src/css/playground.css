@@ -1,4 +1,6 @@
-
+html, body {
+    background-color: #181b1e !important;
+}
 
 #editor, #console {
     font-size: 12px;
@@ -8,10 +10,6 @@ small a {
     position: fixed;
     bottom: 1%;
     left: 1%;
-}
-
-html, body {
-    background-color: #181b1e !important;
 }
 
 .modal-content {
@@ -55,4 +53,14 @@ html, body {
 }
 #spinner.active {
     visibility: visible;
+}
+
+.main-container {
+    display: flex; 
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.ads {
+    margin-top: 3em;
 }
