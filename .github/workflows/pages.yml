@@ -1,0 +1,50 @@
+name: Deploy to Pages
+
+on:
+  push:
+    branches:
+      - "master"
+    paths:
+      - "web/**"
+      - ".github/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v1
+      - name: Install fd
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: fd-find
+      - name: Install yj
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: yj
+      - name: Install jinja2
+        run: pip install jinja2-cli
+      - name: Build Site
+        run: make site
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: 'web/out'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@main

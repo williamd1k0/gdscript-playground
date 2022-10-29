@@ -1,0 +1,39 @@
+<div class="container-fluid">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm">
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a class="nav-link active bg-dark" href="#" aria-disabled="false">Script</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link disabled" href="#" aria-disabled="true"></a>
+					</li>
+					<li class="nav-item">
+						<form id="run-script" action="{{ site.gdscript_function.url }}" method="post">
+							<button class="share btn btn-outline-info" type="button" data-toggle="modal" data-target="#ShareModal">Share</button>
+							<input type="hidden" name="code">
+							<input type="hidden" name="mode" value="script">
+							<button class="run-script btn btn-outline-success" type="submit" title="Run script [Ctrl+Enter]">Run</button>
+						</form>
+					</li>
+				</ul>
+				<div id="editor">
+				</div>
+			</div>
+			
+			<div class="col-sm">
+				<ul class="nav nav-tabs">
+					<li class="nav-item">
+						<a class="nav-link active bg-dark" href="#" aria-disabled="false">Output</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link disabled" href="#" aria-disabled="true">Godot Engine <span id="godot-version"></span> <img id="spinner" width="16px" src="img/spinner.gif"></a>
+					</li>
+				</ul>
+				<div id="console">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

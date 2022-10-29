@@ -1,0 +1,26 @@
+{% extends "layouts/base.html.j2" %}
+
+{% block head %}
+	{{ super() }}
+	<script src="lib/jquery.min.js"></script>
+	
+	<link rel="stylesheet" href="lib/bootstrap/bootstrap.min.css">
+	<script src="lib/bootstrap/bootstrap.min.js"></script>
+	
+	<link rel="stylesheet" href="lib/codemirror/lib/codemirror.css">
+	<link rel="stylesheet" href="lib/codemirror/theme/dracula.css">
+	<link rel="stylesheet" href="lib/codemirror/theme/night.css">
+	<script src="lib/codemirror/lib/codemirror.js"></script>
+	<script src="lib/codemirror/mode/gdscript/gdscript.js"></script>
+	
+	<script src="lib/lz-string.min.js"></script>
+	
+	<link rel="stylesheet" type="text/css" href="css/playground.css">
+	<script src="js/scripteditor.js"></script>
+	<script src="js/scriptoutput.js"></script>
+	<script src="js/snippets.js"></script>
+{% endblock %}
+
+{% block content %}
+	{{ super() }}
+{% endblock %}
