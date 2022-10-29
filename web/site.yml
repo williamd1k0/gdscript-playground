@@ -2,8 +2,8 @@ sitename: Tumeo Space
 title: GDScript Playground
 description: Try a script right now! Desktop or mobile web browser.
 author: William Tumeo
-siteurl: https://tumeo.space/gdscript-playground/
-baseurl: /gdscript-playground/
+siteurl: https://gd.tumeo.space/
+baseurl: /
 
 repourl: https://github.com/williamd1k0/gdscript-playground
 twitter: "@tumeo_"
