@@ -6,7 +6,7 @@ all: ${BIN_TARGET} ${VERSION_TARGET}
 
 ${BIN_TARGET}: ${GODOT_BIN}
 	rm -f -- $@
-	upx -9 --best -o $@ $<
+	upx -9 -o $@ $<
 
 ${VERSION_TARGET}: ${GODOT_BIN}
 	printf 'GODOT_VERSION = "%s"' '$(shell $< --version | sed s/.custom_build//)' > $@
