@@ -24,3 +24,13 @@ packages:
         environment: {}
         annotations: {}
         limits: {}
+      - name: test
+        binary: false
+        main: ''
+        runtime: 'python:default'
+        web: true
+        parameters:
+          code: "print(Engine.get_version_info())"
+        environment: {}
+        annotations: {}
+        limits: {}
