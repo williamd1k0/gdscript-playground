@@ -10,6 +10,7 @@ def main(args):
     os.chmod(godot_bin, st.st_mode | stat.S_IEXEC)
     code = args.get("code")
     if code is not None:
+        print(code)
         gds = GDSCriptCLI(godot_bin, json=True, timeout=10)
         output = gds.block(code, sys_exit=False)[0]
         return { "body": json.loads(output) }
