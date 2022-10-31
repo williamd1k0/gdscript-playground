@@ -1,1 +1,1 @@
-GODOT_VERSION = "3.5.1.stable.official.6fed1ffa3"
+GODOT_VERSION = "3.5.1.stable.6fed1ffa3"
