@@ -2,23 +2,34 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-sm">
-				<ul class="nav nav-tabs">
+				<ul class="nav nav-tabs justify-content-between">
 					<li class="nav-item">
 						<a class="nav-link active bg-dark" href="#" aria-disabled="false">Script</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link disabled" href="#" aria-disabled="true"></a>
+					{# <li class="nav-item navbar-dark">
+						<a class="nav-link share" href="#" data-toggle="modal" data-target="#ShareModal" aria-disabled="false">Share</a>
 					</li>
 					<li class="nav-item">
+						<a class="nav-link disabled" href="#" aria-disabled="true"></a>
+					</li> #}
+					<li class="nav-item mr-sm-2">
 						<form id="run-script" action="{{ site.gdscript_function.url }}" method="post">
-							<button class="share btn btn-outline-info" type="button" data-toggle="modal" data-target="#ShareModal">Share</button>
 							<input type="hidden" name="code">
 							<input type="hidden" name="mode" value="script">
-							<button class="run-script btn btn-outline-success" type="submit" title="Run script [Ctrl+Enter]">Run</button>
+							<button class="run-script btn btn-success" type="submit" title="Run script [Ctrl+Enter]">
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+									<path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+								</svg>
+							</button>
 						</form>
 					</li>
 				</ul>
 				<div id="editor">
+					<button title="Share" class="btn btn-outline-secondary share" data-toggle="modal" data-target="#ShareModal" aria-disabled="false" style="position: absolute; right: 20px; bottom: 5px; z-index: 2;">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share-fill" viewBox="0 0 16 16">
+							<path d="M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z"/>
+						</svg>
+					</button>
 				</div>
 			</div>
 			
@@ -28,8 +39,11 @@
 						<a class="nav-link active bg-dark" href="#" aria-disabled="false">Output</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link disabled" href="#" aria-disabled="true">Godot Engine <span id="godot-version"></span> <img id="spinner" width="16px" src="img/spinner.gif"></a>
+						<a class="nav-link disabled" href="#" aria-disabled="true">
+							<img id="spinner" width="16px" src="img/spinner.gif">
+						</a>
 					</li>
+					
 				</ul>
 				<div id="console">
 				</div>

@@ -48,6 +48,21 @@ $(document).ready(function() {
 			'X-Require-Whisk-Auth': {{ site.version_function.token | tojson }}
 		}
 	}, function(result) {
-		document.querySelector("#godot-version").textContent = result;
+		document.querySelector("#godot-version").textContent = "v"+result;
+		let versionsMenu = $("#menu-versions");
+		let version_click_callback = function(version) {
+			let dropdown = document.querySelector("#versions-dropdown");
+			dropdown.textContent = version;
+		};
+		for (let ver of ["v3.5.1.stable.6fed1ffa3", "v4.0.beta.6fed1ffa3"]) {
+			var a = document.createElement('a');
+			a.href = '#';
+			a.classList.add('dropdown-item');
+			a.classList.add('bg-dark');
+			a.textContent = ver;
+			$(a).on('click', version_click_callback.bind(null, ver));
+			versionsMenu.append(a);
+		}
 	});
+
 });
