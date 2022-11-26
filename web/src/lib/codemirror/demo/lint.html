@@ -9,7 +9,7 @@
 <script src="../lib/codemirror.js"></script>
 <script src="../mode/javascript/javascript.js"></script>
 <script src="../mode/css/css.js"></script>
-<script src="https://unpkg.com/jshint@2.9.6/dist/jshint.js"></script>
+<script src="https://unpkg.com/jshint@2.13.2/dist/jshint.js"></script>
 <script src="https://unpkg.com/jsonlint@1.6.3/web/jsonlint.js"></script>
 <script src="https://unpkg.com/csslint@1.0.5/dist/csslint.js"></script>
 <script src="../addon/lint/lint.js"></script>
@@ -20,12 +20,12 @@
       .CodeMirror {border: 1px solid black;}
     </style>
 <div id=nav>
-  <a href="https://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>
+  <a href="https://codemirror.net/5"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>
 
   <ul>
     <li><a href="../index.html">Home</a>
     <li><a href="../doc/manual.html">Manual</a>
-    <li><a href="https://github.com/codemirror/codemirror">Code</a>
+    <li><a href="https://github.com/codemirror/codemirror5">Code</a>
   </ul>
   <ul>
     <li><a class=active href="#">Linter</a>
@@ -150,7 +150,7 @@ li.last {
     lineNumbers: true,
     mode: "javascript",
     gutters: ["CodeMirror-lint-markers"],
-    lint: true
+    lint: {options: {esversion: 2021}},
   });
 
   var editor_json = CodeMirror.fromTextArea(document.getElementById("code-json"), {

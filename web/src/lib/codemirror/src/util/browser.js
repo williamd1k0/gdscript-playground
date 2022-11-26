@@ -11,13 +11,14 @@ export let ie = ie_upto10 || ie_11up || edge
 export let ie_version = ie && (ie_upto10 ? document.documentMode || 6 : +(edge || ie_11up)[1])
 export let webkit = !edge && /WebKit\//.test(userAgent)
 let qtwebkit = webkit && /Qt\/\d+\.\d+/.test(userAgent)
-export let chrome = !edge && /Chrome\//.test(userAgent)
+export let chrome = !edge && /Chrome\/(\d+)/.exec(userAgent)
+export let chrome_version = chrome && +chrome[1]
 export let presto = /Opera\//.test(userAgent)
 export let safari = /Apple Computer/.test(navigator.vendor)
 export let mac_geMountainLion = /Mac OS X 1\d\D([8-9]|\d\d)\D/.test(userAgent)
 export let phantom = /PhantomJS/.test(userAgent)
 
-export let ios = !edge && /AppleWebKit/.test(userAgent) && /Mobile\/\w+/.test(userAgent)
+export let ios = safari && (/Mobile\/\w+/.test(userAgent) || navigator.maxTouchPoints > 2)
 export let android = /Android/.test(userAgent)
 // This is woefully incomplete. Suggestions for alternative methods welcome.
 export let mobile = ios || android || /webOS|BlackBerry|Opera Mini|Opera Mobi|IEMobile/i.test(userAgent)

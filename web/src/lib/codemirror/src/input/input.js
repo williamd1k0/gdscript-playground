@@ -51,7 +51,7 @@ export function applyTextInput(cm, inserted, deleted, sel, origin) {
         from = Pos(from.line, from.ch - deleted)
       else if (cm.state.overwrite && !paste) // Handle overwrite
         to = Pos(to.line, Math.min(getLine(doc, to.line).text.length, to.ch + lst(textLines).length))
-      else if (paste && lastCopied && lastCopied.lineWise && lastCopied.text.join("\n") == inserted)
+      else if (paste && lastCopied && lastCopied.lineWise && lastCopied.text.join("\n") == textLines.join("\n"))
         from = to = Pos(from.line, 0)
     }
     let changeEvent = {from: from, to: to, text: multiPaste ? multiPaste[i % multiPaste.length] : textLines,
@@ -72,7 +72,7 @@ export function handlePaste(e, cm) {
   let pasted = e.clipboardData && e.clipboardData.getData("Text")
   if (pasted) {
     e.preventDefault()
-    if (!cm.isReadOnly() && !cm.options.disableInput)
+    if (!cm.isReadOnly() && !cm.options.disableInput && cm.hasFocus())
       runInOp(cm, () => applyTextInput(cm, pasted, 0, null, "paste"))
     return true
   }
@@ -114,13 +114,13 @@ export function copyableRanges(cm) {
 }
 
 export function disableBrowserMagic(field, spellcheck, autocorrect, autocapitalize) {
-  field.setAttribute("autocorrect", !!autocorrect)
-  field.setAttribute("autocapitalize", !!autocapitalize)
+  field.setAttribute("autocorrect", autocorrect ? "" : "off")
+  field.setAttribute("autocapitalize", autocapitalize ? "" : "off")
   field.setAttribute("spellcheck", !!spellcheck)
 }
 
 export function hiddenTextarea() {
-  let te = elt("textarea", null, null, "position: absolute; bottom: -1em; padding: 0; width: 1px; height: 1em; outline: none")
+  let te = elt("textarea", null, null, "position: absolute; bottom: -1em; padding: 0; width: 1px; height: 1em; min-height: 1em; outline: none")
   let div = elt("div", [te], null, "overflow: hidden; position: relative; width: 3px; height: 0px;")
   // The textarea is kept positioned near the cursor to prevent the
   // fact that it'll be scrolled into view on input from scrolling

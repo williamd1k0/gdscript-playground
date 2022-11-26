@@ -1,12 +1,13 @@
-import { gecko, ie, ie_version, mobile, webkit } from "../util/browser.js"
+import { gecko, ie, ie_version, mobile, webkit, chrome, chrome_version } from "../util/browser.js"
 import { elt, eltP } from "../util/dom.js"
 import { scrollerGap } from "../util/misc.js"
+import { getGutters, renderGutters } from "./gutters.js"
 
 // The display handles the DOM integration, both for input reading
 // and content drawing. It holds references to DOM nodes and
 // display-related state.
 
-export function Display(place, doc, input) {
+export function Display(place, doc, input, options) {
   let d = this
   this.input = input
 
@@ -47,6 +48,12 @@ export function Display(place, doc, input) {
   d.scroller.setAttribute("tabIndex", "-1")
   // The element in which the editor lives.
   d.wrapper = elt("div", [d.scrollbarFiller, d.gutterFiller, d.scroller], "CodeMirror")
+  // See #6982. FIXME remove when this has been fixed for a while in Chrome
+  if (chrome && chrome_version >= 105) d.wrapper.style.clipPath = "inset(0px)"
+
+  // This attribute is respected by automatic translation systems such as Google Translate,
+  // and may also be respected by tools used by human translators.
+  d.wrapper.setAttribute('translate', 'no')
 
   // Work around IE7 z-index bug (not perfect, hence IE7 not really being supported)
   if (ie && ie_version < 8) { d.gutters.style.zIndex = -1; d.scroller.style.paddingRight = 0 }
@@ -101,6 +108,9 @@ export function Display(place, doc, input) {
   d.selForContextMenu = null
 
   d.activeTouch = null
+
+  d.gutterSpecs = getGutters(options.gutters, options.lineNumbers)
+  renderGutters(d)
 
   input.init(d)
 }
