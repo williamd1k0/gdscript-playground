@@ -3,8 +3,9 @@ import { heightAtLine, visualLineEndNo, visualLineNo } from "../line/spans.js"
 import { getLine, lineNumberFor } from "../line/utils_line.js"
 import { displayHeight, displayWidth, getDimensions, paddingVert, scrollGap } from "../measurement/position_measurement.js"
 import { mac, webkit } from "../util/browser.js"
-import { activeElt, removeChildren, contains } from "../util/dom.js"
+import { activeElt, removeChildren, contains, win, doc } from "../util/dom.js"
 import { hasHandler, signal } from "../util/event.js"
+import { signalLater } from "../util/operation_group.js"
 import { indexOf } from "../util/misc.js"
 
 import { buildLineElement, updateLineForChanges } from "./update_line.js"
@@ -56,11 +57,11 @@ export function maybeClipScrollbars(cm) {
 
 function selectionSnapshot(cm) {
   if (cm.hasFocus()) return null
-  let active = activeElt()
+  let active = activeElt(doc(cm))
   if (!active || !contains(cm.display.lineDiv, active)) return null
   let result = {activeElt: active}
   if (window.getSelection) {
-    let sel = window.getSelection()
+    let sel = win(cm).getSelection()
     if (sel.anchorNode && sel.extend && contains(cm.display.lineDiv, sel.anchorNode)) {
       result.anchorNode = sel.anchorNode
       result.anchorOffset = sel.anchorOffset
@@ -72,10 +73,12 @@ function selectionSnapshot(cm) {
 }
 
 function restoreSelection(snapshot) {
-  if (!snapshot || !snapshot.activeElt || snapshot.activeElt == activeElt()) return
+  if (!snapshot || !snapshot.activeElt || snapshot.activeElt == activeElt(snapshot.activeElt.ownerDocument)) return
   snapshot.activeElt.focus()
-  if (snapshot.anchorNode && contains(document.body, snapshot.anchorNode) && contains(document.body, snapshot.focusNode)) {
-    let sel = window.getSelection(), range = document.createRange()
+  if (!/^(INPUT|TEXTAREA)$/.test(snapshot.activeElt.nodeName) &&
+      snapshot.anchorNode && contains(document.body, snapshot.anchorNode) && contains(document.body, snapshot.focusNode)) {
+    let doc = snapshot.activeElt.ownerDocument
+    let sel = doc.defaultView.getSelection(), range = doc.createRange()
     range.setEnd(snapshot.anchorNode, snapshot.anchorOffset)
     range.collapse(false)
     sel.removeAllRanges()
@@ -172,6 +175,8 @@ export function postUpdateDisplay(cm, update) {
       update.visible = visibleLines(cm.display, cm.doc, viewport)
       if (update.visible.from >= cm.display.viewFrom && update.visible.to <= cm.display.viewTo)
         break
+    } else if (first) {
+      update.visible = visibleLines(cm.display, cm.doc, viewport)
     }
     if (!updateDisplayIfNeeded(cm, update)) break
     updateHeightsInViewport(cm)
@@ -248,9 +253,11 @@ function patchDisplay(cm, updateNumbersFrom, dims) {
   while (cur) cur = rm(cur)
 }
 
-export function updateGutterSpace(cm) {
-  let width = cm.display.gutters.offsetWidth
-  cm.display.sizer.style.marginLeft = width + "px"
+export function updateGutterSpace(display) {
+  let width = display.gutters.offsetWidth
+  display.sizer.style.marginLeft = width + "px"
+  // Send an event to consumers responding to changes in gutter width.
+  signalLater(display, "gutterChanged", display)
 }
 
 export function setDocumentHeight(cm, measure) {

@@ -2,7 +2,7 @@
   font-family: 'Source Sans Pro';
   font-style: normal;
   font-weight: 400;
-  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(//themes.googleusercontent.com/static/fonts/sourcesanspro/v5/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff) format('woff');
+  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(source_sans.woff) format('woff');
 }
 
 body, html { margin: 0; padding: 0; height: 100%; }
@@ -164,55 +164,6 @@ section.first {
   margin: 1em 0 0;
   min-height: 100px;
   position: relative;
-}
-
-.actionspicture {
-  pointer-events: none;
-  position: absolute;
-  height: 100px;
-  top: 0; left: 0; right: 0;
-}
-
-.actionlink {
-  pointer-events: auto;
-  font-family: arial;
-  font-size: 80%;
-  font-weight: bold;
-  position: absolute;
-  top: 0; bottom: 0;
-  line-height: 1;
-  height: 1em;
-  margin: auto;
-}
-
-.actionlink.download {
-  color: white;
-  right: 50%;
-  margin-right: 13px;
-  text-shadow: -1px 1px 3px #b00, -1px -1px 3px #b00, 1px 0px 3px #b00;
-}
-
-.actionlink.fund {
-  color: #b00;
-  left: 50%;
-  margin-left: 15px;
-}
-
-.actionlink:hover {
-  text-decoration: underline;
-}
-
-.actionlink a {
-  color: inherit;
-}
-
-.actionsleft {
-  float: left;
-}
-
-.actionsright {
-  float: right;
-  text-align: right;
 }
 
 @media screen and (max-width: 800px) {

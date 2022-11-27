@@ -5,8 +5,8 @@
     # The well-known "Hello, World" program.
 
     func _ready():
-    	# Called every time the node is added to the scene.
-    	print("Hello, World!")
+        # Called every time the node is added to the scene.
+        print("Hello, World!")
 
 - name: Arrays
   code: |-
@@ -19,15 +19,15 @@
     # Related docs: https://docs.godotengine.org/en/stable/classes/class_array.html
 
     func _ready():
-    	var arr = []
-    	arr = [1, 2, 3]
-    	var b = arr[1] # This is 2.
-    	var c = arr[arr.size() - 1] # This is 3.
-    	var d = arr[-1] # Same as the previous line, but shorter.
-    	prints(b, c, d)
-    	arr[0] = "Hi!" # Replacing value 1 with "Hi!".
-    	arr.append(4) # Array is now ["Hi!", 2, 3, 4].
-    	prints(arr)
+        var arr = []
+        arr = [1, 2, 3]
+        var b = arr[1] # This is 2.
+        var c = arr[arr.size() - 1] # This is 3.
+        var d = arr[-1] # Same as the previous line, but shorter.
+        prints(b, c, d)
+        arr[0] = "Hi!" # Replacing value 1 with "Hi!".
+        arr.append(4) # Array is now ["Hi!", 2, 3, 4].
+        prints(arr)
 
 - name: Dictionaries
   code: |-
@@ -38,16 +38,16 @@
     # Related docs: https://docs.godotengine.org/en/stable/classes/class_dictionary.html
     
     func _ready():
-    	# Define a new Dictionary using curly braces {}
-    	var d = {"A key": "A value", 4: 5, 28: [1, 2, 3]}
-    	d["Hi!"] = 0 # Insert new key-value pair
-    	prints(d)
-    	prints(d["Hi!"])
-    	d = {
-    		22: "value",
-    		"some_key": 2,
-    		"other_key": [2, 3, 4],
-    		"more_key": "Hello"
-    	}
-    	prints(d.keys()) # Get all keys as an array
-    	prints(d.values()) # Get all values as an array
+      # Define a new Dictionary using curly braces {}
+      var d = {"A key": "A value", 4: 5, 28: [1, 2, 3]}
+      d["Hi!"] = 0 # Insert new key-value pair
+      prints(d)
+      prints(d["Hi!"])
+      d = {
+          22: "value",
+          "some_key": 2,
+          "other_key": [2, 3, 4],
+          "more_key": "Hello"
+      }
+      prints(d.keys()) # Get all keys as an array
+      prints(d.values()) # Get all values as an array

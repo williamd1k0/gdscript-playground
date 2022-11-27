@@ -2,7 +2,7 @@ import { clipPos } from "../line/pos.js"
 import { findMaxLine } from "../line/spans.js"
 import { displayWidth, measureChar, scrollGap } from "../measurement/position_measurement.js"
 import { signal } from "../util/event.js"
-import { activeElt } from "../util/dom.js"
+import { activeElt, doc } from "../util/dom.js"
 import { finishOperation, pushOperation } from "../util/operation_group.js"
 
 import { ensureFocus } from "./focus.js"
@@ -36,7 +36,8 @@ export function startOperation(cm) {
     scrollLeft: null, scrollTop: null, // Intermediate scroll position, not pushed to DOM yet
     scrollToPos: null,       // Used to scroll to a specific position
     focus: false,
-    id: ++nextOpId           // Unique ID
+    id: ++nextOpId,          // Unique ID
+    markArrays: null         // Used by addMarkedSpan
   }
   pushOperation(cm.curOp)
 }
@@ -115,7 +116,7 @@ function endOperation_W2(op) {
     cm.display.maxLineChanged = false
   }
 
-  let takeFocus = op.focus && op.focus == activeElt()
+  let takeFocus = op.focus && op.focus == activeElt(doc(cm))
   if (op.preparedSelection)
     cm.display.input.showSelection(op.preparedSelection, takeFocus)
   if (op.updatedDisplay || op.startHeight != cm.doc.height)

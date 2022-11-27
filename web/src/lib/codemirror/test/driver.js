@@ -1,4 +1,4 @@
-var tests = [], filters = [], allNames = [];
+var tests = [], filters = [], nameCounts = {};
 
 function Failure(why) {this.message = why;}
 Failure.prototype.toString = function() { return this.message; };
@@ -12,13 +12,12 @@ function indexOf(collection, elt) {
 
 function test(name, run, expectedFail) {
   // Force unique names
-  var originalName = name;
-  var i = 2; // Second function would be NAME_2
-  while (indexOf(allNames, name) !== -1){
-    name = originalName + "_" + i;
-    i++;
+  if (nameCounts[name] == undefined){
+    nameCounts[name] = 2;
+  } else { 
+    // Append number if not first test with this name.
+    name = name + '_' + (nameCounts[name]++);
   }
-  allNames.push(name);
   // Add test
   tests.push({name: name, func: run, expectedFail: expectedFail});
   return name;
@@ -101,6 +100,9 @@ function label(str, msg) {
 }
 function eq(a, b, msg) {
   if (a != b) throw new Failure(label(a + " != " + b, msg));
+}
+function notEq(a, b, msg) {
+  if (a == b) throw new Failure(label(a + " == " + b, msg));
 }
 function near(a, b, margin, msg) {
   if (Math.abs(a - b) > margin)

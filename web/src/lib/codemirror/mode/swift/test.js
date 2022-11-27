@@ -1,5 +1,5 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: https://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/5/LICENSE
 
 (function() {
   var mode = CodeMirror.getMode({indentUnit: 2}, "swift");
@@ -40,7 +40,8 @@
      "[string multi]",
      "[string line]",
      "[string \"test\"]",
-     "[string \"\"\"]");
+     "[string \"\"\"]",
+     "[variable print][punctuation (][string \"\"][punctuation )]");
 
   // Comments.
   MT("comments",
