@@ -28,8 +28,14 @@
 	<meta property="twitter:text:title" content="{{ site.title }}" />
 	<meta property="twitter:description" content="{{ site.description }}" />
 	<meta property="twitter:image" content="{{ "{}{}".format(site.siteurl, "img/gdscript.png") }}" />
-	<script data-goatcounter="https://gdtumeospace.goatcounter.com/count"
-	        async src="//gc.zgo.at/count.js"></script>
+	<script>
+		window.goatcounter = {
+			path: function() {
+				return location.pathname + (location.search.length > 1 ? 'sharedcode' : ''),
+			},
+		}
+	</script>
+	<script data-goatcounter="https://gdtumeospace.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 {% endblock %}
 </head>
 
