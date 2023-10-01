@@ -10,8 +10,10 @@ function show_error(line) {
 }
 
 $(document).ready(function() {
-	var code_injection = LZString.decompressFromEncodedURIComponent(location.search.substring(1));
-	var sample = code_injection ? code_injection : SAMPLE;
+	var sample = SAMPLE;
+	if (has_external_script()) {
+		sample = "# Fetching script...";
+	}
 	EDITOR = CodeMirror(document.querySelector('#editor'), {
 		lineNumbers: true,
 		indentUnit: 4,
@@ -40,6 +42,8 @@ $(document).ready(function() {
 		EDITOR.setValue(SAMPLE);
 		OUTPUT.setValue('');
 	});
+
+	fetch_external_script();
 
 });
 
