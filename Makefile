@@ -1,7 +1,16 @@
+PROD := no
+NAMESPACE = gdscript-playground
+ifneq (${PROD}, yes)
+	NAMESPACE = gdscript-playground-devel
+endif
+
 site:
 	@make -C web
 
-deploy:
-	@doctl serverless deploy functions
+deploy: connect
+	@doctl sls deploy functions
 
-.PHONY: site deploy
+connect:
+	@doctl sls connect ${NAMESPACE}
+
+.PHONY: site connect deploy

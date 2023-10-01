@@ -1,0 +1,64 @@
+diff --git a/platform/linuxbsd/os_linuxbsd.cpp b/platform/linuxbsd/os_linuxbsd.cpp
+index e14e4fb52d..4c569075f7 100644
+--- a/platform/linuxbsd/os_linuxbsd.cpp
++++ b/platform/linuxbsd/os_linuxbsd.cpp
+@@ -41,6 +41,8 @@
+ 
+ #ifdef X11_ENABLED
+ #include "x11/display_server_x11.h"
++#else
++#include "servers/rendering_server.h"
+ #endif
+ 
+ #ifdef HAVE_MNTENT
+diff --git a/scene/resources/world_2d.cpp b/scene/resources/world_2d.cpp
+index 75deb1e60b..5f52179800 100644
+--- a/scene/resources/world_2d.cpp
++++ b/scene/resources/world_2d.cpp
+@@ -46,9 +46,11 @@ RID World2D::get_space() const {
+ 	return space;
+ }
+ 
++#ifdef MODULE_NAVIGATION_ENABLED
+ RID World2D::get_navigation_map() const {
+ 	return navigation_map;
+ }
++#endif
+ 
+ void World2D::_bind_methods() {
+ 	ClassDB::bind_method(D_METHOD("get_canvas"), &World2D::get_canvas);
+@@ -80,16 +82,20 @@ World2D::World2D() {
+ 	PhysicsServer2D::get_singleton()->area_set_param(space, PhysicsServer2D::AREA_PARAM_ANGULAR_DAMP, GLOBAL_DEF("physics/2d/default_angular_damp", 1.0));
+ 	ProjectSettings::get_singleton()->set_custom_property_info("physics/2d/default_angular_damp", PropertyInfo(Variant::FLOAT, "physics/2d/default_angular_damp", PROPERTY_HINT_RANGE, "-1,100,0.001,or_greater"));
+ 
++#ifdef MODULE_NAVIGATION_ENABLED
+ 	// Create and configure the navigation_map to be more friendly with pixels than meters.
+ 	navigation_map = NavigationServer2D::get_singleton()->map_create();
+ 	NavigationServer2D::get_singleton()->map_set_active(navigation_map, true);
+ 	NavigationServer2D::get_singleton()->map_set_cell_size(navigation_map, GLOBAL_DEF("navigation/2d/default_cell_size", 1));
+ 	NavigationServer2D::get_singleton()->map_set_edge_connection_margin(navigation_map, GLOBAL_DEF("navigation/2d/default_edge_connection_margin", 1));
+ 	NavigationServer2D::get_singleton()->map_set_link_connection_radius(navigation_map, GLOBAL_DEF("navigation/2d/default_link_connection_radius", 4));
++#endif
+ }
+ 
+ World2D::~World2D() {
+ 	RenderingServer::get_singleton()->free(canvas);
+ 	PhysicsServer2D::get_singleton()->free(space);
++#ifdef MODULE_NAVIGATION_ENABLED
+ 	NavigationServer2D::get_singleton()->free(navigation_map);
++#endif
+ }
+diff --git a/scene/resources/world_2d.h b/scene/resources/world_2d.h
+index c04b8f6461..ae3e328d95 100644
+--- a/scene/resources/world_2d.h
++++ b/scene/resources/world_2d.h
+@@ -44,7 +44,9 @@ class World2D : public Resource {
+ 
+ 	RID canvas;
+ 	RID space;
++#ifdef MODULE_NAVIGATION_ENABLED
+ 	RID navigation_map;
++#endif
+ 
+ 	HashSet<Viewport *> viewports;
+ 
