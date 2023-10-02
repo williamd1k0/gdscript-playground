@@ -24,21 +24,6 @@ packages:
         environment: {}
         annotations: {}
         limits: {}
-  - name: gdscript
-    environment: {}
-    parameters: {}
-    annotations: {}
-    functions:
-      - name: test
-        binary: false
-        main: ''
-        runtime: 'python:default'
-        web: true
-        parameters:
-          code: "print(Engine.get_version_info())"
-        environment: {}
-        annotations: {}
-        limits: {}
   - name: share
     environment: {}
     parameters: {}
