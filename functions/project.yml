@@ -53,3 +53,12 @@ packages:
         environment: {}
         annotations: {}
         limits: {}
+      - name: gist
+        binary: false
+        main: ''
+        runtime: 'python:default'
+        web: true
+        parameters: {}
+        environment: {}
+        annotations: {}
+        limits: {}

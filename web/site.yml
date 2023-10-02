@@ -21,6 +21,10 @@ rentry_function:
   url: share/rentry
   token: Ka7WuJGcMIly9Dr
 
+gist_function:
+  url: share/gist
+  token: Zp7kI6inEK1lhd4
+
 ads_enabled: true
 custom_ads_enabled: true
 adsbygoogle_enabled: false
