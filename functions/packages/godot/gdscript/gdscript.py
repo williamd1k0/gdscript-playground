@@ -24,7 +24,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 # WARN: This code is a bit messy, be careful
-# TODO: Add an error handler
 # TODO: Improve script template
 # TODO: Add documentation...
 # TODO: Profit :P
@@ -67,7 +66,6 @@ def strip_ansi(text):
 
 
 class GodotScript(object):
-
     MODE_EXTENDS = 0
     MODE_CLASS = 1
     MODE_SIMPLE = 2
@@ -76,21 +74,10 @@ class GodotScript(object):
 {body}
 func _init():
     if {verbose}: prints('[gdscript]', '_init')
-    if {timeout} == 0:
-        var instance = {name}.new()
-        root.add_child(instance)
-        if {autoquit}:
-            if {verbose}: prints('[gdscript]', 'autoquit')
-            quit()
-    else:
-        if {verbose}: prints('[gdscript]', 'timeout mode')
-        var timer = Timer.new()
-        root.add_child(timer)
-        timer.set_wait_time({timeout})
-        timer.start()
-        var instance = {name}.new()
-        root.add_child(instance)
-        yield(timer, 'timeout')
+    var instance = {name}.new()
+    root.add_child(instance)
+    if {autoquit}:
+        if {verbose}: prints('[gdscript]', 'autoquit')
         quit()
     if {verbose}: prints('[gdscript]', '_init DONE')
 """
@@ -104,11 +91,10 @@ func _ready():
 {body}
 """
 
-    def __init__(self, body, mode=0, name=None, timeout=0, path=None, autoquit=True):
+    def __init__(self, body, mode=0, name=None, path=None, autoquit=True):
         self._body = body
         self._name = name
         self.mode = mode
-        self.timeout = timeout
         self.path = path
         self.autoquit = int(autoquit)
         self.map_lines = 1
@@ -134,35 +120,35 @@ func _ready():
 
     def full_body(self):
         return self.CLASS_BODY.format(
-            body=self.body, name=self.name, timeout=self.timeout, autoquit=self.autoquit, verbose=int(VERBOSE1)
+            body=self.body, name=self.name, autoquit=self.autoquit, verbose=int(VERBOSE1)
         )
 
     def __repr__(self):
         return self.full_body()
 
     @classmethod
-    def from_simple(cls, body, timeout=0, autoquit=True):
-        return cls(body, cls.MODE_SIMPLE, timeout=timeout, autoquit=autoquit)
+    def from_simple(cls, body, autoquit=True):
+        return cls(body, cls.MODE_SIMPLE, autoquit=autoquit)
 
     @classmethod
-    def from_file(cls, path, mode, timeout=0, autoquit=True):
+    def from_file(cls, path, mode, autoquit=True):
         with open(path, 'r', encoding='utf-8') as gds:
             body = gds.read()
             body = body.replace('\t', '    ')
         return cls(
-            body, mode, timeout=timeout,
+            body, mode,
             path=os.path.dirname(os.path.abspath(path)),
             autoquit=autoquit
         )
 
     @classmethod
-    def from_file_ex(cls, path, timeout=0, autoquit=True):
-        return cls.from_file(path, cls.MODE_EXTENDS, timeout, autoquit)
+    def from_file_ex(cls, path, autoquit=True):
+        return cls.from_file(path, cls.MODE_EXTENDS, autoquit)
 
     @classmethod
-    def from_file_cls(cls, path, timeout=0, autoquit=True):
+    def from_file_cls(cls, path, autoquit=True):
         raise NotImplementedError()
-        # return cls.from_file(path, cls.MODE_CLASS, timeout)
+        # return cls.from_file(path, cls.MODE_CLASS)
 
 
 
@@ -188,6 +174,12 @@ class ScriptProcess(object):
                 path = self.script_body.path
             temp = tempfile('w', encoding='utf-8', suffix='.gd', dir=path, delete=False)
             self.script_path = temp.name
+            if path is None:
+                path = os.path.dirname(self.script_path)
+                self.script_body.path = path
+            if not os.path.exists(os.path.join(path, "project.godot")):
+                with open(os.path.join(path, "project.godot"), "w"):
+                    pass # Create empty project file
             temp.close()
         return self.script_path
 
@@ -201,10 +193,11 @@ class ScriptProcess(object):
             cmd = cmd + ('--path', self.script_body.path)
         if VERBOSE3:
             cmd = cmd + ('-v',)
-        if VERBOSE2:
-            print('GODOT COMMAND:', cmd)
         if not self.window: # and 'win' in sys.platform:
             cmd = cmd + ('--no-window',) # ignored in x11/MacOS
+            cmd = cmd + ('--headless',) # Godot 4 headless mode
+        if VERBOSE2:
+            print('GODOT COMMAND:', cmd)
         if self.timeout > 0:
             return ('timeout', '-s', 'KILL', str(self.timeout)) + cmd
         return cmd
@@ -279,6 +272,8 @@ class ScriptProcess(object):
                             version_line = uline
                             if 'v3.2' in version_line:
                                 ignore_next = True
+                            if 'v4.' in version_line:
+                                ignore_next = True
                         elif re_ogl.match(uline) and 'v3.2' in version_line:
                             ignore_next = True
                         elif re_ogl.match(uline) is None and re_ver.match(uline) is None:
@@ -318,24 +313,24 @@ class GDSCriptCLI(object):
     def _create_process(self, script):
         return ScriptProcess(script, self._godot, self._window, self._json, self._timeout)
 
-    def oneline(self, code, timeout=0, autoquit=True, sys_exit=True):
+    def oneline(self, code, autoquit=True, sys_exit=True):
         """Executes one line of code."""
-        script = GodotScript.from_simple(code, timeout, autoquit)
+        script = GodotScript.from_simple(code, autoquit)
         process = self._create_process(script)
         if sys_exit:
             sys.exit(process.exec_godot_script()[1])
         else:
             return process.exec_godot_script()
 
-    def block(self, code, timeout=0, autoquit=True, sys_exit=True):
+    def block(self, code, autoquit=True, sys_exit=True):
         """Executes a block of code."""
         code = code.replace('\t', '    ')
         if re.search(r'^extends\s', code, re.M) is None:
-            return self.oneline(code, timeout=timeout, autoquit=autoquit, sys_exit=sys_exit)
+            return self.oneline(code, autoquit=autoquit, sys_exit=sys_exit)
         if True: # mode == 'extends':
-            script = GodotScript(code, timeout=timeout, autoquit=autoquit)
+            script = GodotScript(code, autoquit=autoquit)
         elif mode == 'class':
-            script = GodotScript.from_file_cls(path, timeout, autoquit)
+            script = GodotScript.from_file_cls(path, autoquit)
         process = self._create_process(script)
         if sys_exit:
             sys.exit(process.exec_godot_script()[1])
@@ -352,13 +347,13 @@ class GDSCriptCLI(object):
         code = 'print({0})'.format(expression)
         self.oneline(code, sys_exit=False)
 
-    def file(self, path, mode='extends', timeout=0, autoquit=True):
+    def file(self, path, mode='extends', autoquit=True):
         """Executes a script file <script.gd>."""
         # TODO: Add automatic mode check
         if mode == 'extends':
-            script = GodotScript.from_file_ex(path, timeout, autoquit)
+            script = GodotScript.from_file_ex(path, autoquit)
         elif mode == 'class':
-            script = GodotScript.from_file_cls(path, timeout, autoquit)
+            script = GodotScript.from_file_cls(path, autoquit)
         process = self._create_process(script)
         sys.exit(process.exec_godot_script()[1])
 
@@ -367,10 +362,13 @@ class GDSCriptCLI(object):
 if __name__ == '__main__':
     if '--version' in sys.argv:
         print('GDScript CLI Wrapper: v%s.%s.%s by William Tumeo' % __version__)
+        version_info = "unknown"
         try:
-            subprocess.run([GODOT_BINARY, '--version'], check=True, stdout=subprocess.PIPE)
+            sub_proc = subprocess.run([GODOT_BINARY, '--version'], check=True, stdout=subprocess.PIPE)
+            version_info = sub_proc.stdout.decode('utf-8').strip() # Godot 4.x
         except subprocess.CalledProcessError as perr:
-            print('Godot Engine: %s' % perr.output.decode('utf-8').strip())
+            version_info = perr.output.decode('utf-8').strip() # Godot 3.x
+        print('Godot Engine: %s' % version_info)
         sys.exit(0)
 
     import argparse
@@ -401,6 +399,6 @@ if __name__ == '__main__':
     if args.eval:
         GD.eval(INPUT)
     elif args.input.endswith('.gd'):
-        GD.file(INPUT, 'extends', args.timeout, not args.quit_manually)
+        GD.file(INPUT, 'extends', not args.quit_manually)
     elif not args.print:
-        GD.block(INPUT, args.timeout, not args.quit_manually)
+        GD.block(INPUT, not args.quit_manually)
