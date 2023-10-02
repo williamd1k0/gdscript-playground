@@ -39,3 +39,17 @@ packages:
         environment: {}
         annotations: {}
         limits: {}
+  - name: share
+    environment: {}
+    parameters: {}
+    annotations: {}
+    functions:
+      - name: rentry
+        binary: false
+        main: ''
+        runtime: 'python:default'
+        web: true
+        parameters: {}
+        environment: {}
+        annotations: {}
+        limits: {}

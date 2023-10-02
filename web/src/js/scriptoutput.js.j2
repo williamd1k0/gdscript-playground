@@ -43,7 +43,7 @@ $(document).ready(function() {
 	});
 
 	$.get({
-		url: {{ site.version_function.url | tojson }},
+		url: "{{ site.function_url + site.version_function.url }}",
 		headers: {
 			'X-Require-Whisk-Auth': {{ site.version_function.token | tojson }}
 		}

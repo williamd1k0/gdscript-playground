@@ -10,7 +10,7 @@
 						<a class="nav-link disabled" href="#" aria-disabled="true"></a>
 					</li>
 					<li class="nav-item">
-						<form id="run-script" action="{{ site.gdscript_function.url }}" method="post">
+						<form id="run-script" action="{{ site.function_url + site.gdscript_function.url }}" method="post">
 							<button class="share btn btn-outline-info" type="button" data-toggle="modal" data-target="#ShareModal">Share</button>
 							<input type="hidden" name="code">
 							<input type="hidden" name="mode" value="script">
