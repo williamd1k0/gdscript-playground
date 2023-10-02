@@ -8,22 +8,21 @@ baseurl: /
 repourl: https://github.com/williamd1k0/gdscript-playground
 twitter: "@tumeo_"
 
-function_url: https://faas-nyc1-2ef2e6cc.doserverless.co/api/v1/web/fn-a614ecdd-5af6-46c4-b511-d3f7c9e3f191/
+function_url: https://faas-nyc1-2ef2e6cc.doserverless.co/api/v1/web/fn-f1a44419-c8a0-4cf5-b9af-d12c7a947ca8/
 
 version_function:
   url: godot/version
-  token: Ok36iwwCb7eERn4
+  token: Va7SERobvyMAkg9
 gdscript_function:
   url: godot/gdscript
-  token: Yz3k5YFGir5ec88
+  token: Op2VrNDf6aiY8Jv
 
 rentry_function:
   url: share/rentry
-  token: Ka7WuJGcMIly9Dr
-
+  token: Qy4TKS1Psz1OPct
 gist_function:
   url: share/gist
-  token: Zp7kI6inEK1lhd4
+  token: Ri1bVMVzSmG30h4
 
 ads_enabled: true
 custom_ads_enabled: true
