@@ -1,5 +1,8 @@
 
 function get_external_script_source() {
+	if (location.search.match(/code=(.+)/)) {
+		return "code";
+	}
 	if (location.search.match(/rentry=(.+)&?/)) {
 		return "rentry";
 	}
@@ -20,6 +23,9 @@ function fetch_external_script() {
 	let source = get_external_script_source();
 	if (source === undefined) return;
 	switch (source) {
+		case "code":
+			EDITOR.setValue(decodeURIComponent(location.search.match(/code=(.+)/)[1]));
+		break;
 		case "lz":
 			EDITOR.setValue(LZString.decompressFromEncodedURIComponent(location.search.substring(1)));
 		break;
