@@ -1,4 +1,4 @@
-GODOT_BIN := $(wildcard ./bin/*.64)
+GODOT_BIN := ./bin/linux_release.x86_64
 BIN_TARGET := packages/godot/gdscript/godot.bin
 VERSION_TARGET := packages/godot/version/godot_version.py
 
