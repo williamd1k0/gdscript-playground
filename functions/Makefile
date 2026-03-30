@@ -10,3 +10,9 @@ ${BIN_TARGET}: ${GODOT_BIN}
 
 ${VERSION_TARGET}: ${GODOT_BIN}
 	printf 'GODOT_VERSION = "%s"' '$(shell $< --version | sed s/.custom_build//)' > $@
+
+test: ${BIN_TARGET}
+	@echo "Testing ${BIN_TARGET}..."
+	@${BIN_TARGET} --version
+	@echo "Testing Code Execution..."
+	@cd packages/godot/gdscript && python . '{"code": "print(Engine.get_version_info())"}'

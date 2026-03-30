@@ -1,1 +1,1 @@
-GODOT_VERSION = "4.4.stable.official.4c311cbee"
+GODOT_VERSION = "4.5.2.stable.official.6ce3de25a"
